@@ -52,6 +52,34 @@ export const AdvancedCounter:React.FC = () =>{
             clearTimeout(timer);
         };
     },[count,history]);
+
+    // keyboard lister useeefect
+    useEffect(()=>{
+        const handleKeyDown = (event:KeyboardEvent) =>{
+            //dont triiger arrow if user is typing inside the step input
+            if(
+                event.target instanceof HTMLInputElement ||
+                event.target instanceof HTMLTextAreaElement
+            ){
+                return;
+            }
+            if(event.key==='ArrowUp'){
+                event.preventDefault();
+                handleIncrement();
+            }else if (event.key==='ArrowDown'){
+                event.preventDefault();
+                handleDecrement();
+            }
+        };
+        window.addEventListener('keydown',handleKeyDown);
+
+        // Cleanup: removes the listener when unmounting
+        return()=>{
+            window.removeEventListener('keydown',handleKeyDown);
+        };
+
+    },[step]);
+
     return(
         <div>
             <span>Cointer</span>
@@ -78,6 +106,7 @@ export const AdvancedCounter:React.FC = () =>{
                 <div>Count History:</div>
                 <div>{history.join(', ')}</div>
             </div>
+            <p>Use ArrowUp to increment and ArrowDown to decrement.</p>
         </div>
     )
 }
