@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 
 export const AdvancedCounter:React.FC = () =>{
     const[count,setCount] = useState<number>(0);
@@ -6,6 +6,9 @@ export const AdvancedCounter:React.FC = () =>{
     const[step,setStep]=useState<number>(1);
 
     const[history,setHistory]=useState<number[]>([0]);
+
+    //ading the sacestatus state here
+    const [saveStatus,setSaveStatus]=useState<string>('Changes saved.');
 
     const handleIncrement = () => {
         setCount((prev)=>prev+1);
@@ -25,8 +28,30 @@ export const AdvancedCounter:React.FC = () =>{
 
     const handleReset = () =>{
         setCount(0);
-        setHistory([0];)
+        setHistory([0]);
     }
+    //autosave useeffect 
+    useEffect(()=>{
+        setSaveStatus('Saving changes...');
+
+        const timer = setTimeout(() => {
+
+            try{
+                localStorage.setItem('advanced_counter_value',JSON.stringify(count));
+                localStorage.setItem('advanced_counter_history',JSON.stringify(history));
+                setSaveStatus('Changes saved.');
+
+            }catch(err){
+                setSaveStatus('Failed to save.');
+            }
+
+        },400)
+        //cleanup function:cancel the pending save if histry updates quickly
+
+        return() => {
+            clearTimeout(timer);
+        };
+    },[count,history]);
     return(
         <div>
             <span>Cointer</span>
@@ -47,6 +72,8 @@ export const AdvancedCounter:React.FC = () =>{
                 
                 />
             </div>
+            {/* display savestatus */}
+            <p>{saveStatus}</p>
             <div>
                 <div>Count History:</div>
                 <div>{history.join(', ')}</div>
