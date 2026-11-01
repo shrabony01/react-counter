@@ -5,12 +5,22 @@ export const AdvancedCounter:React.FC = () =>{
 
     const[step,setStep]=useState<number>(1);
 
+    const[history,setHistory]=useState<number[]>([0]);
+
     const handleIncrement = () => {
         setCount((prev)=>prev+1);
+
+        const next = prev +step;
+        setHistory((hist) => [...hist,next]);
+        return next;
     }
 
     const handleDecrement = () => {
         setCount((prev) => prev-1);
+
+        const next= prev - step;
+        setHistory((hist) => [...hist,next]);
+        return next;
     }
     return(
         <div>
@@ -30,6 +40,10 @@ export const AdvancedCounter:React.FC = () =>{
                     onChange={(e) =>setStep(Math.max(1,Number(e.target.value)||1))}
                 
                 />
+            </div>
+            <div>
+                <div>Count History:</div>
+                <div>{history.join(', ')}</div>
             </div>
         </div>
     )
