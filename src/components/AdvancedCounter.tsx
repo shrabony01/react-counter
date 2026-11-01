@@ -22,6 +22,11 @@ export const AdvancedCounter:React.FC = () =>{
         setHistory((hist) => [...hist,next]);
         return next;
     }
+
+    const handleReset = () =>{
+        setCount(0);
+        setHistory([0];)
+    }
     return(
         <div>
             <span>Cointer</span>
@@ -29,6 +34,7 @@ export const AdvancedCounter:React.FC = () =>{
             <div>
                 <button type='button' onClick={handleDecrement}>Decrement</button>
                 <button type='button' onClick={handleIncrement}>Increment</button>
+                <button type='button' onClick={handleReset}>Reset</button>
             </div>
             <div>
                 <label htmlFor='step-input'>Step Value: </label>
