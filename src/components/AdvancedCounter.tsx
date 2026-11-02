@@ -11,22 +11,16 @@ export const AdvancedCounter:React.FC = () =>{
     const [saveStatus,setSaveStatus]=useState<string>('Changes saved.');
 
     const handleIncrement = () => {
-        setCount((prev)=>{
-             const next = prev +step;
-             setHistory((hist) => [...hist,next]);
-             return next;
-        });
-    };
+    const next = count + step;
+    setCount(next);
+    setHistory((prev) => [...prev, next]);
+  };
 
-    const handleDecrement = () => {
-        setCount((prev) => {
-            const next =prev - step;
-            setHistory((hist) => [...hist,next]);
-            return next;
-        
-        });
-
-    };
+  const handleDecrement = () => {
+    const next = count - step;
+    setCount(next);
+    setHistory((prev) => [...prev, next]);
+  };
 
     const handleReset = () =>{
         setCount(0);
@@ -80,13 +74,13 @@ export const AdvancedCounter:React.FC = () =>{
             window.removeEventListener('keydown',handleKeyDown);
         };
 
-    },[step]);
+    },[count,step]);
 
     return(
         <div style={styles.card}>
             <span style={styles.headerTitle}>Counter</span>
             <h2 style={styles.counterText}>
-                Current Count:<span style={styles.boldNumber}>{count}</span>
+                Current Count: <span style={styles.boldNumber}>{count}</span>
              </h2>
             <div style={styles.buttonRow}>
                 <button type='button' onClick={handleDecrement} style={styles.neutralButton}>
