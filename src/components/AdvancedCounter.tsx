@@ -11,20 +11,22 @@ export const AdvancedCounter:React.FC = () =>{
     const [saveStatus,setSaveStatus]=useState<string>('Changes saved.');
 
     const handleIncrement = () => {
-        setCount((prev)=>prev+1);
-
-        const next = prev +step;
-        setHistory((hist) => [...hist,next]);
-        return next;
-    }
+        setCount((prev)=>{
+             const next = prev +step;
+             setHistory((hist) => [...hist,next]);
+             return next;
+        });
+    };
 
     const handleDecrement = () => {
-        setCount((prev) => prev-1);
+        setCount((prev) => {
+            const next =prev - step;
+            setHistory((hist) => [...hist,next]);
+            return next;
+        
+        });
 
-        const next= prev - step;
-        setHistory((hist) => [...hist,next]);
-        return next;
-    }
+    };
 
     const handleReset = () =>{
         setCount(0);
@@ -66,7 +68,7 @@ export const AdvancedCounter:React.FC = () =>{
             if(event.key==='ArrowUp'){
                 event.preventDefault();
                 handleIncrement();
-            }else if (event.key==='ArrowDown'){
+            } else if (event.key==='ArrowDown'){
                 event.preventDefault();
                 handleDecrement();
             }
@@ -81,33 +83,144 @@ export const AdvancedCounter:React.FC = () =>{
     },[step]);
 
     return(
-        <div>
-            <span>Cointer</span>
-            <h2>Current Count: {count}</h2>
-            <div>
-                <button type='button' onClick={handleDecrement}>Decrement</button>
-                <button type='button' onClick={handleIncrement}>Increment</button>
-                <button type='button' onClick={handleReset}>Reset</button>
+        <div style={styles.card}>
+            <span style={styles.headerTitle}>Counter</span>
+            <h2 style={styles.counterText}>
+                Current Count:<span style={styles.boldNumber}>{count}</span>
+             </h2>
+            <div style={styles.buttonRow}>
+                <button type='button' onClick={handleDecrement} style={styles.neutralButton}>
+                    Decrement
+                </button>
+                <button type='button' onClick={handleIncrement} style={styles.neutralButton}>
+                    Increment
+                </button>
+                <button type='button' onClick={handleReset} style={styles.resetButton}>
+                    Reset
+                </button>
             </div>
-            <div>
-                <label htmlFor='step-input'>Step Value: </label>
+            <div style={styles.stepContainer}>
+                <label htmlFor='step-input' style={styles.stepLabel}>
+                    Step Value: 
+                </label>
                 <input
                     id='step-input'
                     type='number'
                     min={1}
                     value={step}
                     onChange={(e) =>setStep(Math.max(1,Number(e.target.value)||1))}
-                
+                    style={styles.stepInput}
                 />
             </div>
             {/* display savestatus */}
-            <p>{saveStatus}</p>
-            <div>
-                <div>Count History:</div>
-                <div>{history.join(', ')}</div>
+            <p style={styles.saveStatus}>{saveStatus}</p>
+            <div style={styles.historySection}>
+                <div style={styles.historyLabel}>Count History:</div>
+                <div style={styles.historyValues}>{history.join(', ')}</div>
             </div>
-            <p>Use ArrowUp to increment and ArrowDown to decrement.</p>
+            <p style={styles.footerHint}>
+                Use ArrowUp to increment and ArrowDown to decrement.
+            </p>
         </div>
     )
 }
 export default AdvancedCounter;
+
+const styles: { [key: string]: React.CSSProperties } = {
+  card: {
+    maxWidth: '460px',
+    margin: '3rem auto',
+    padding: '2rem 1.5rem 1.5rem',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0',
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    color: '#334155',
+  },
+  headerTitle: {
+    fontSize: '0.95rem',
+    color: '#64748b',
+    fontWeight: 500,
+  },
+  counterText: {
+    fontSize: '1.9rem',
+    fontWeight: 500,
+    margin: '1.25rem 0',
+    color: '#1e293b',
+  },
+  boldNumber: {
+    fontWeight: 700,
+  },
+  buttonRow: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '0.75rem',
+    marginBottom: '1.5rem',
+  },
+  neutralButton: {
+    padding: '0.55rem 1rem',
+    backgroundColor: '#ffffff',
+    border: '1px solid #cbd5e1',
+    borderRadius: '6px',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    color: '#334155',
+    fontWeight: 500,
+  },
+  resetButton: {
+    padding: '0.55rem 1.2rem',
+    backgroundColor: '#ef4444',
+    border: '1px solid #ef4444',
+    borderRadius: '6px',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    color: '#ffffff',
+    fontWeight: 500,
+  },
+  stepContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+    fontSize: '0.95rem',
+  },
+  stepLabel: {
+    color: '#475569',
+  },
+  stepInput: {
+    width: '55px',
+    padding: '0.25rem 0.4rem',
+    border: '1px solid #cbd5e1',
+    borderRadius: '4px',
+    textAlign: 'center',
+    fontSize: '0.95rem',
+  },
+  saveStatus: {
+    fontStyle: 'italic',
+    fontSize: '0.85rem',
+    color: '#64748b',
+    margin: '0.75rem 0 1.25rem',
+  },
+  historySection: {
+    borderTop: '1px solid #e2e8f0',
+    paddingTop: '1rem',
+    textAlign: 'left',
+    fontSize: '0.875rem',
+  },
+  historyLabel: {
+    color: '#475569',
+    marginBottom: '0.5rem',
+  },
+  historyValues: {
+    color: '#0f172a',
+    wordBreak: 'break-word',
+  },
+  footerHint: {
+    marginTop: '1.5rem',
+    fontSize: '0.75rem',
+    color: '#94a3b8',
+  },
+};
